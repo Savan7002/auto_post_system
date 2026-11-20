@@ -1,5 +1,13 @@
+"""Post a test message to a single platform, for debugging its keys and API calls."""
+
 import asyncio
 import sys
+
+from pathlib import Path
+
+# Running "python scripts/test_platform.py" puts scripts/ on the import path, not the
+# project root, so "import app" would fail. Add the project root BEFORE importing app.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import httpx
 
@@ -10,6 +18,8 @@ from app.platforms.bluesky import BlueskyPlatform
 from app.platforms.github_gist import GitHubGistPlatform
 from app.platforms.devto import DevToPlatform
 from app.platforms.discord import DiscordPlatform
+
+
 
 PLATFORMS = {
     "telegram": TelegramPlatform,

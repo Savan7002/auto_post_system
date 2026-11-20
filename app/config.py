@@ -2,6 +2,10 @@ from functools import lru_cache
 from pydantic_settings import  BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
+    """API keys and options, read from the environment or .env.
+
+    Any key left unset just means that platform is skipped.
+    """
 
     model_config = SettingsConfigDict(env_file=".env",extra = "ignore")
 
@@ -24,5 +28,6 @@ class Settings(BaseSettings):
 
 
 def get_settings() -> Settings:
+    """Load settings. Used as a FastAPI dependency so tests can override it."""
     return  Settings()
 

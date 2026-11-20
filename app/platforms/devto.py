@@ -5,6 +5,7 @@ TITLE_MAX_LENGTH = 60
 
 
 class DevToPlatform(BasePlatform):
+    """Publish the message as a short dev.to article."""
 
     name = "Dev.to"
 
@@ -13,6 +14,7 @@ class DevToPlatform(BasePlatform):
 
     @staticmethod
     def _make_title(message: str) -> str:
+        """dev.to requires a title, so build one from the message text minus the link."""
         text = message
         for link in extract_links(message):
             text = text.replace(link, "")

@@ -3,6 +3,7 @@ from app.schemas import PlatformResult
 
 
 class MastodonPlatform(BasePlatform):
+    """Publish a public status on Mastodon."""
 
     name = "Mastodon"
 
@@ -10,6 +11,7 @@ class MastodonPlatform(BasePlatform):
         return bool(self.settings.mastodon_access_token)
 
     async def publish(self, message: str) -> PlatformResult:
+        # Mastodon is federated, so the account's server comes from settings.
         base_url = self.settings.mastodon_base_url.rstrip("/")
 
         response = await self.client.post(

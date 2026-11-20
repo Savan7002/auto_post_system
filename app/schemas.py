@@ -13,10 +13,16 @@ _url_checker = TypeAdapter(HttpUrl)
 
 
 def extract_links(text: str) -> list[str]:
+    """Find http(s) links in the text.
+
+    Trailing punctuation is dropped so "see https://x.com." doesn't pick up the period.
+    """
     return [link.rstrip(TRAILING_PUNCTUATION) for link in URL_PATTERN.findall(text)]
 
 
 class PostRequest(BaseModel):
+    """Request body. There's no platforms field on purpose: the server decides where to post."""
+
     message: str = Field(
         ...,
         min_length=1,
@@ -28,6 +34,7 @@ class PostRequest(BaseModel):
     @field_validator("message")
     @classmethod
     def validate_message(cls, value: str) -> str:
+        """Require exactly one link, and make sure it's a valid URL with a real domain."""
 
         value = value.strip()
         if not value:
@@ -45,6 +52,7 @@ class PostRequest(BaseModel):
         except ValidationError:
             raise ValueError(f"The CTA link is not a valid URL: {links[0]}")
 
+        # HttpUrl accepts hosts like "http://localhost", which isn't a usable CTA.
         host = links[0].split("://", 1)[1].split("/", 1)[0]
         if "." not in host:
             raise ValueError(f"The CTA link is not a valid domain: {links[0]}")

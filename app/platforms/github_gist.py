@@ -3,6 +3,7 @@ from app.schemas import PlatformResult
 
 
 class GitHubGistPlatform(BasePlatform):
+    """Publish the message as a public gist. The token only needs the gist scope."""
 
     name = "GitHub Gist"
 
@@ -16,7 +17,7 @@ class GitHubGistPlatform(BasePlatform):
                 "Authorization": f"Bearer {self.settings.github_token}",
                 "Accept": "application/vnd.github+json",
                 "X-GitHub-Api-Version": "2022-11-28",
-                "User-Agent": "MultiPlatformPostingAPI",
+                "User-Agent": "MultiPlatformPostingAPI",  # GitHub rejects requests without one
             },
             json={
                 "description": "Posted by Multi-Platform Posting API",
