@@ -25,10 +25,10 @@ class BasePlatform(ABC):
         ...
 
     async def post(self, message: str) -> PlatformResult:
-        if not self.is_configured():
-            return self._failed("Not configured: add this platform's keys to .env")
-
         try:
+            if not self.is_configured():
+                return self._failed("Not configured: add this platform's keys to .env")
+
             return await self.publish(message)
 
         except httpx.HTTPStatusError as exc:
